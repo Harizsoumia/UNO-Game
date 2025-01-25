@@ -18,12 +18,12 @@ public abstract class Card {
 
     // Enum for card colors
     public enum CardColor {
-        RED, YELLOW, GREEN, BLUE, WILD;
+        Red, Yellow, Green, Blue, Wild;
     }
 
     // Enum for card values
     public enum Value {
-        ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE,
-        DRAW_TWO, SKIP, REVERSE, WILD, WILD_FOUR;
+        0, 1, 2, 3,4, 5, 6, 7, 8,9,
+        Draw, Skip, Reverce, WILD, WILD_FOUR;
     }
 }
