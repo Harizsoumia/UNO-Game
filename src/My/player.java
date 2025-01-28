@@ -1,49 +1,61 @@
-import java.util.Arraylist;
 package My;
-	public class player {
-	private string nom ;
-	private Arraylist<Card> PlayerCards;
-	public int nbrCards;
-	public player(string nom  ) {
-	 this.nom=nom;
-	 this.PlayerCards=new Arraylist<>();
-	 }
-	 public string getnom() {
-	  return nom;
-	 }
-	public Arraylist<Card> getPlayerCards(){
-	 return playerCards;
-	 {
-	public void ajouterCarte(Card card) {
-	 PlayerCards.add(card);
-	 nbrCards++;
-	}
-	public Card lancerCarte(int i) {
-	 while(i>0) {
-	  if(i<nbrCards) {
-	   return PlayerCards.remove(i);
-	   nbrCards++;
-	  }
-	  
-	 }
-	}
 
+import java.util.ArrayList;
 
-	public void afficherCartes() {
-	 System.out.println("les cartes de"+nom+"sont:");
-	 for(int j = 0;j<nbrCartes;j++) {
-	  System.out.println(PlayerCards.get(j));
-	}
-	}
-	public void NombreDeCarte() {
-	 System.out.println(nbrCards);
-	}public void winner() {
-	 if (nbrcards = 0) {
-	 system.out.println(nom+"a gange.");
-	 
-	 }else {system.out.println(nom+",tas pas encore gange");
-	}
-	 
+public class Player {
+    private String name;
+    private ArrayList<Card> hand;
 
-	}
+    public Player(String name) {
+        this.name = name;
+        this.hand = new ArrayList<>();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ArrayList<Card> getHand() {
+        return hand;
+    }
+
+    public void addCard(Card card) {
+        hand.add(card);
+    }
+
+    public Card playCard(int index) {
+        if (index < 0 || index >= hand.size()) {
+            throw new IllegalArgumentException("Invalid card index: " + index + ". The hand size is: " + hand.size());
+        }
+        return hand.remove(index);
+    }
+
+    public int getCardsCount() {
+        return hand.size();  // Directly return the size of the hand
+    }
+
+    public void drawCard(Deck deck) {
+        if (hand.size() < 7) {  // Prevent the player from having more than 7 cards
+            Card card = deck.drawCard();
+            addCard(card);
+            System.out.println(name + " drew a " + card);  // Added logging to show the drawn card
+        } else {
+            System.out.println(name + " already has 7 cards and cannot draw more.");
+        }
+    }
+
+    public boolean hasEmptyHand() {
+        return hand.isEmpty();  // Check if the hand is empty
+    }
+
+    public void showCards() {
+        System.out.println(name + "'s cards:");
+        if (hand.isEmpty()) {
+            System.out.println("No cards left.");
+        } else {
+            for (int i = 0; i < hand.size(); i++) {
+                System.out.println(i + ": " + hand.get(i));  // Display index and card
+            }
+        }
+    }
 }
