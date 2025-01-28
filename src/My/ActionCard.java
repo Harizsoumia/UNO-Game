@@ -1,21 +1,13 @@
 package My;
 
 public class ActionCard extends Card {
-    private final Value action;
-
-    public ActionCard(CardColor color, Value action) {
-        super(color);
-        this.action = action;
-    }
-
-    @Override
-    public String getValue() {
-        return action.toString();
+    // Constructor for ActionCard that takes color and action (value)
+    public ActionCard(CardColor color, Value value) {
+        super(color, value); // Call the parent constructor with color and value
     }
 
     @Override
     public String toString() {
-        return color + "-" + action;
+        return color + " - " + value; // String representation of the ActionCard
     }
 }
-
