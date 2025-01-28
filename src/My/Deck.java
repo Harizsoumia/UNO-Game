@@ -3,81 +3,87 @@ package My;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class Deck {
-    private Card[] cards;
-    private int cardsInDeck;
+    private List<Card> cards;
 
     public Deck() {
-        cards = new Card[108];
+        cards = new ArrayList<>();
         reset();
     }
 
     public void reset() {
-        CardColor[] colors = CardColor.values();
-        cardsInDeck = 0;
-
-        for (CardColor color : colors) {
-            if (color != CardColor.WILD) {
-                for (int i = 0; i <= 9; i++) {
-                    cards[cardsInDeck++] = new NumberCard(color, i);
-                    if (i != 0) {
-                        cards[cardsInDeck++] = new NumberCard(color, i);
-                    }
-                }
-
-                Value[] actions = {Value.DRAW_TWO, Value.SKIP, Value.REVERSE};
-                for (Value action : actions) {
-                    cards[cardsInDeck++] = new ActionCard(color, action);
-                    cards[cardsInDeck++] = new ActionCard(color, action);
-                }
-            }
-        }
-
-        Value[] wilds = {Value.WILD, Value.WILD_FOUR};
-        for (Value wild : wilds) {
-            for (int i = 0; i < 4; i++) {
-                cards[cardsInDeck++] = new WildCard(wild);
-            }
-        }
-    }
-
-    public void replaceDeckWith(List<Card> cardsList) {
-        cards = cardsList.toArray(new Card[cardsList.size()]);
-        cardsInDeck = cards.length;
+        cards.clear();
+        addNumberCards();
+        addActionCards();
+        addWildCards();
         shuffleDeck();
     }
 
-    private void shuffleDeck() {
-        Random random = new Random();
-        for (int i = cards.length - 1; i > 0; i--) {
-            int randomIndex = random.nextInt(i + 1);
-            Card temp = cards[randomIndex];
-            cards[randomIndex] = cards[i];
-            cards[i] = temp;
+    private void addNumberCards() {
+        for (Card.CardColor color : Card.CardColor.values()) {
+            if (color != Card.CardColor.Wild) { // Skip Wild color
+                for (int i = 0; i <= 9; i++) {
+                    Card.Value value = Card.Value.values()[i]; // Convert the number to corresponding Value enum
+
+                    cards.add(new NumberCard(color, value));  // Add a number card
+
+                    if (i != 0) {  // Add a second card for numbers 1-9
+                        cards.add(new NumberCard(color, value));
+                    }
+                }
+            }
         }
+    }
+
+
+
+    private void addActionCards() {
+        for (Card.CardColor color : Card.CardColor.values()) {
+            if (color != Card.CardColor.Wild) { // Skip Wild color
+                for (Card.Value action : new Card.Value[]{Card.Value.DrawTwo, Card.Value.Skip, Card.Value.Reverse}) {
+                    cards.add(new ActionCard(color, action));  // Pass color and value (action)
+                    cards.add(new ActionCard(color, action));  // Add a second card for the action
+                }
+            }
+        }
+    }
+
+    private void addWildCards() {
+        for (Card.Value wild : new Card.Value[]{Card.Value.Wild, Card.Value.WildFour}) {
+            for (int i = 0; i < 4; i++) {
+                cards.add(new WildCard(wild));
+            }
+        }
+    }
+
+    public void shuffleDeck() {
+        Collections.shuffle(cards);
     }
 
     public Card drawCard() {
-        if (cardsInDeck == 0) {
-            throw new IllegalArgumentException("Cannot draw from an empty deck");
+        if (cards.isEmpty()) {
+            throw new IllegalArgumentException("Cannot draw from an empty deck. Consider resetting the deck.");
         }
-        return cards[--cardsInDeck];
+        return cards.remove(cards.size() - 1);
     }
 
-    public Card[] drawCards(int num) {
-        if (num < 0 || num > cardsInDeck) {
-            throw new IllegalArgumentException("Invalid number of cards to draw");
+    public List<Card> drawCards(int num) {
+        if (num < 0 || num > cards.size()) {
+            throw new IllegalArgumentException("Invalid number of cards to draw: " + num);
         }
-        Card[] drawnCards = new Card[num];
+        List<Card> drawnCards = new ArrayList<>();
         for (int i = 0; i < num; i++) {
-            drawnCards[i] = drawCard();
+            drawnCards.add(drawCard());
         }
         return drawnCards;
     }
 
     public boolean isEmpty() {
-        return cardsInDeck == 0;
+        return cards.isEmpty();
+    }
+
+    public int cardsRemaining() {
+        return cards.size();
     }
 }
