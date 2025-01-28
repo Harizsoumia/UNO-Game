@@ -1,20 +1,13 @@
 package My;
 
-public class NumberCard extends Card {
-    private final int number;
-
-    public NumberCard(CardColor color, int number) {
-        super(color);
-        this.number = number;
-    }
-
-    @Override
-    public String getValue() {
-        return String.valueOf(this.number);
+public class WildCard extends Card {
+    // Constructor for WildCard that only takes the action (Wild or WildFour)
+    public WildCard(Value value) {
+        super(CardColor.Wild, value); // WildCard is always of Wild color, value is Wild or WildFour
     }
 
     @Override
     public String toString() {
-        return color + "-" + number;
+        return color + " - " + value; // String representation of the WildCard
     }
 }
