@@ -6,31 +6,14 @@ public class Bot extends Player {
         super(name);
     }
 
-    // Bot plays a card based on a simple strategy
     public Card playCard(Card topCard) {
-        // Try to play a valid card that matches the top card color or value
-        for (int i = 0; i < getHand().size(); i++) {
-            Card card = getHand().get(i);
-            if (isValidMove(card, topCard)) {
-                System.out.println(getName() + " plays: " + card);  // Log the played card
-                return playCard(i);  // Play the card at index i
+        // Bot logic to play the best card possible
+        for (int i = 0; i < hand.size(); i++) {
+            Card card = hand.get(i);
+            if (card.getColor() == topCard.getColor() || card.getValue() == topCard.getValue() || card instanceof WildCard || card instanceof WildFourCard) {
+                return playCard(i);
             }
         }
-
-        // If no valid card, draw a new card
-        System.out.println(getName() + " draws a card.");
-        drawCard(new Deck());
-        return null;  // Returning null since no card was played
-    }
-
-    // Check if the card is a valid move
-    private boolean isValidMove(Card card, Card topCard) {
-        return card.getColor() == topCard.getColor() || card.getValue().equals(topCard.getValue());
-    }
-
-    @Override
-    public void drawCard(Deck deck) {
-        super.drawCard(deck);
-        System.out.println(getName() + " drew a card.");
+        return null; // Bot will draw a card if no valid move
     }
 }
