@@ -1,0 +1,7 @@
+package My;
+
+public class WildFourCard extends Card {
+    public WildFourCard(Value value) {
+        super(CardColor.Wild, value); // Wild Four card also has a color of "Wild"
+    }
+}
