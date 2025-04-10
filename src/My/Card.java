@@ -1,13 +1,10 @@
 package My;
 
 public abstract class Card {
-    public enum CardColor { Red, Yellow, Green, Blue, Wild }
-    public enum Value { Zero, One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Skip, Reverse, DrawTwo, Wild, WildFour }
+    private CardColor color;
+    private CardValue value;
 
-    protected CardColor color;
-    protected Value value;
-
-    public Card(CardColor color, Value value) {
+    public Card(CardColor color, CardValue value) {
         this.color = color;
         this.value = value;
     }
@@ -16,7 +13,7 @@ public abstract class Card {
         return color;
     }
 
-    public Value getValue() {
+    public CardValue getValue() {
         return value;
     }
 
