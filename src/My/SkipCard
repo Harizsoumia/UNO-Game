@@ -1,0 +1,13 @@
+package My;
+
+public class SkipCard extends ActionCard {
+    public SkipCard(CardColor color) {
+        super(color, CardValue.Skip);
+    }
+
+    @Override
+    public void applyAction(Game game, Player currentPlayer) {
+        // Logic to skip the next player's turn
+        game.skipNextPlayer();
+    }
+}
