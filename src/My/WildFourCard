@@ -1,6 +1,6 @@
 package My;
 
-public class WildDrawFourCard extends ActionCard {
+public class WildFourCard extends ActionCard {
     public WildDrawFourCard() {
         super(CardColor.Wild, CardValue.WildDrawFour);
     }
