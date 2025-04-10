@@ -1,0 +1,14 @@
+package My;
+
+public class TakeTwoCard extends ActionCard {
+    public TakeTwoCard(CardColor color) {
+        super(color, CardValue.DrawTwo);
+    }
+
+    @Override
+    public void applyAction(Game game, Player currentPlayer) {
+        // Logic to make the next player draw two cards
+        game.drawCards(game.getNextPlayer(currentPlayer), 2);
+        game.skipNextPlayer();
+    }
+}
