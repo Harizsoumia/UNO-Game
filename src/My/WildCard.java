@@ -1,12 +1,13 @@
 package My;
 
-public class WildCard extends Card {
-    public WildCard(CardColor color, Value value) {
-        super(color, value);
+public class WildCard extends ActionCard {
+    public WildCard() {
+        super(CardColor.Wild, CardValue.Wild);
     }
 
     @Override
-    public String toString() {
-        return "Wild - " + value;
+    public void applyAction(Game game, Player currentPlayer) {
+        // Logic to change the color of play
+        game.changeColor(currentPlayer);
     }
 }
