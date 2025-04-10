@@ -1,0 +1,13 @@
+package My;
+
+public class ReverseCard extends ActionCard {
+    public ReverseCard(CardColor color) {
+        super(color, CardValue.Reverse);
+    }
+
+    @Override
+    public void applyAction(Game game, Player currentPlayer) {
+        // Logic to reverse the direction of play
+        game.reverseDirection();
+    }
+}
