@@ -1,7 +1,18 @@
 package My;
 
-public class WildFourCard extends Card {
-    public WildFourCard(Value value) {
-        super(CardColor.Wild, value); // Wild Four card also has a color of "Wild"
+public class WildDrawFourCard extends ActionCard {
+    public WildDrawFourCard() {
+        super(CardColor.Wild, CardValue.WildDrawFour);
+    }
+
+    @Override
+    public void applyAction(Game game, Player currentPlayer) {
+        // Change the color of play
+        game.changeColor(currentPlayer);
+        
+        // Logic to make the next player draw four cards
+        Player nextPlayer = game.getNextPlayer(currentPlayer);
+        game.drawCards(nextPlayer, 4);
+        game.skipNextPlayer(); // Skip the next player's turn
     }
 }
