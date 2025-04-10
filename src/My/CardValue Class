@@ -1,0 +1,20 @@
+package My;
+
+public class CardValue {
+    public enum Value { Zero, One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Skip, Reverse, DrawTwo, Wild, WildFour }
+
+    private Value value;
+
+    public CardValue(Value value) {
+        this.value = value;
+    }
+
+    public Value getValue() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return value.toString();
+    }
+}
