@@ -1,7 +1,7 @@
 package My;
 
-public class ActionCard extends Card {
-    public ActionCard(CardColor color, Value value) {
+public abstract class ActionCard extends Card implements Actionable {
+    public ActionCard(CardColor color, CardValue value) {
         super(color, value);
     }
 }
