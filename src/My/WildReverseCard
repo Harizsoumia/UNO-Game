@@ -1,0 +1,16 @@
+package My;
+
+public class WildReverseCard extends ActionCard {
+    public WildReverseCard() {
+        super(CardColor.Wild, CardValue.WildReverse);
+    }
+
+    @Override
+    public void applyAction(Game game, Player currentPlayer) {
+        // Change the color of play
+        game.changeColor(currentPlayer);
+        
+        // Logic to reverse the direction of play
+        game.reverseDirection();
+    }
+}
