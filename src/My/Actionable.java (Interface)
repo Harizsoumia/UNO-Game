@@ -1,0 +1,5 @@
+package My;
+
+public interface Actionable {
+    void applyAction(Game game, Player currentPlayer);
+}
