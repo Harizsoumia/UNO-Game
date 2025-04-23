@@ -1,11 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
-//====================================classe du jpanel personalisée =============================================================================================
-public class CustomPanel extends JPanel {
+//====================================classe du jFrame personalisée =============================================================================================
+public class CustomFrame extends Jframe {
     
     private ImageIcon icon;
     
-    public CustomPanel() {
+    public CustomFrame() {
         // Configuration du JPanel avec fond bleu ciel
         this.setBackground(new Color(135, 206, 235)); // Couleur bleu ciel (Sky Blue)
         this.setLayout(new FlowLayout(FlowLayout.RIGHT)); // Layout horizontal, aligné à gauche
