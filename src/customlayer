@@ -51,71 +51,260 @@ public class CustomPanel extends JPanel {
 
 //======================================class du jframe personaliséeees===================================================================================
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 public class CustomFrame extends JFrame {
     
-    private NewClass titleBar; // Votre JPanel personnalisé existant
+    private NewClass titleBar;
+    private JPanel contentPanel;
     private Point initialClick;
+    private boolean isResizing = false;
     
     public CustomFrame() {
-        // Supprimer la décoration standard de fenêtre
+        // Supprimer la décoration standard de la fenêtre
         setUndecorated(true);
         
-        // Initialiser le layout principal
+        // Créer un layout principal
         setLayout(new BorderLayout());
         
-        // Instancier votre barre de titre personnalisée
+        // Initialiser la barre de titre personnalisée
         titleBar = new NewClass();
+        titleBar.setPreferredSize(new Dimension(getWidth(), 40)); // Hauteur de 40px pour la barre de titre
         
-        // Ajouter la fonction de déplacement de fenêtre à votre barre de titre
-        enableWindowDrag(titleBar);
         
-      
         
-        // Créer un panel pour le contenu principal
-        JPanel contentPanel = new JPanel();
+        // Ajouter la fonctionnalité de déplacement de la fenêtre
+        addMoveWindowListener();
+        
+        // Créer un panel pour le contenu
+        contentPanel = new JPanel();
         contentPanel.setBackground(Color.WHITE);
         contentPanel.setLayout(new BorderLayout());
-        contentPanel.add(new JLabel("Contenu de l'application", SwingConstants.CENTER), 
-                BorderLayout.CENTER);
+        
+        // Ajouter un texte d'exemple dans le panel de contenu
+        JLabel exampleLabel = new JLabel("الترلتبالؤ", SwingConstants.CENTER);
+        exampleLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        contentPanel.add(exampleLabel, BorderLayout.CENTER);
         
         // Ajouter une bordure pour l'effet visuel
         getRootPane().setBorder(BorderFactory.createLineBorder(new Color(100, 181, 246), 2));
         
-        // Assembler la fenêtre
+        // Ajouter les composants à la frame
         add(titleBar, BorderLayout.NORTH);
         add(contentPanel, BorderLayout.CENTER);
         
-        // Configurer la taille et la position
+        // Ajouter des écouteurs pour le redimensionnement
+        addResizeListener();
+        
+        // Configurer la taille et la position de la fenêtre
         setSize(800, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     
-    private void enableWindowDrag(JComponent component) {
-        component.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                initialClick = e.getPoint();
+    private void addControlButtons() {
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+        buttonPanel.setOpaque(false);
+        
+        // Bouton Réduire
+        JButton minimizeBtn = createButton("−", new Color(135, 206, 235));
+        minimizeBtn.addActionListener(e -> setState(JFrame.ICONIFIED));
+        
+        // Bouton Agrandir/Restaurer
+        JButton maximizeBtn = createButton("□", new Color(135, 206, 235));
+        maximizeBtn.addActionListener(e -> {
+            if (getExtendedState() != JFrame.MAXIMIZED_BOTH) {
+                setExtendedState(JFrame.MAXIMIZED_BOTH);
+            } else {
+                setExtendedState(JFrame.NORMAL);
             }
         });
         
-        component.addMouseMotionListener(new MouseMotionAdapter() {
+        // Bouton Fermer
+        JButton closeBtn = createButton("×", new Color(135, 206, 235));
+        closeBtn.addActionListener(e -> System.exit(0));
+        
+        buttonPanel.add(minimizeBtn);
+        buttonPanel.add(maximizeBtn);
+        buttonPanel.add(closeBtn);
+        
+        titleBar.add(buttonPanel);
+    }
+    
+    private JButton createButton(String text, Color bgColor) {
+        JButton button = new JButton(text);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setFont(new Font("Arial", Font.BOLD, 16));
+        button.setForeground(Color.WHITE);
+        button.setPreferredSize(new Dimension(30, 25));
+        
+        // Hover effect
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (text.equals("×")) {
+                    button.setForeground(Color.RED);
+                } else {
+                    button.setForeground(Color.LIGHT_GRAY);
+                }
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setForeground(Color.WHITE);
+            }
+        });
+        
+        return button;
+    }
+    
+    private void addMoveWindowListener() {
+        titleBar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                initialClick = e.getPoint();
+                getComponentAt(initialClick);
+            }
+        });
+        
+        titleBar.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                // Calculer le déplacement
+                // Si la fenêtre est maximisée, on la restaure d'abord
+                if (getExtendedState() == JFrame.MAXIMIZED_BOTH) {
+                    setExtendedState(JFrame.NORMAL);
+                    return;
+                }
+                
+                // Récupérer la position actuelle de la souris
                 int thisX = getLocation().x;
                 int thisY = getLocation().y;
                 
-                // Déterminer la distance de déplacement
+                // Déterminer le déplacement
                 int xMoved = e.getX() - initialClick.x;
                 int yMoved = e.getY() - initialClick.y;
                 
                 // Déplacer la fenêtre
-                setLocation(thisX + xMoved, thisY + yMoved);
+                int X = thisX + xMoved;
+                int Y = thisY + yMoved;
+                setLocation(X, Y);
             }
         });
     }
+    
+    private void addResizeListener() {
+        // Définir une zone de bord où le redimensionnement est activé
+        int border = 5;
+        
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                isResizing = true;
+                initialClick = e.getPoint();
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                isResizing = false;
+            }
+        });
+        
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int x = e.getX();
+                int y = e.getY();
+                int width = getWidth();
+                int height = getHeight();
+                
+                // Définir le curseur selon la position
+                if (x >= width - border && y >= height - border) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
+                } else if (x >= width - border) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
+                } else if (y >= height - border) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR));
+                } else {
+                    setCursor(Cursor.getDefaultCursor());
+                }
+            }
+            
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (isResizing && getCursor() != Cursor.getDefaultCursor()) {
+                    int newWidth = getWidth();
+                    int newHeight = getHeight();
+                    
+                    if (getCursor() == Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR)) {
+                        newWidth = e.getX();
+                    } else if (getCursor() == Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR)) {
+                        newHeight = e.getY();
+                    } else if (getCursor() == Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR)) {
+                        newWidth = e.getX();
+                        newHeight = e.getY();
+                    }
+                    
+                    if (newWidth >= 300 && newHeight >= 200) {
+                        setSize(newWidth, newHeight);
+                        validate();
+                        repaint();
+                    }
+                }
+            }
+        });
+    }
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
