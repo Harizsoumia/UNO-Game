@@ -471,45 +471,44 @@ public class CustomDialog extends JDialog {
 import javax.swing.*;
 import java.awt.*;
 
-// Classe personnalisée qui hérite de JPanel
-// Elle ajoute des coins arrondis + un dégradé de transparence
 public class NewClass extends JPanel {
 
-    private int cornerRadius; // Rayon des coins arrondis
+    private int cornerRadius;
+    private Color baseColor = new Color(0, 0, 0); // noir par défaut
 
-    // Constructeur : permet de définir le rayon d'arrondi
-    public NewClass(int radius) {
-        this.cornerRadius = radius;
-
-        // Important pour que la transparence fonctionne correctement
+    public NewClass() {
+        this.cornerRadius = 50;
         setOpaque(false);
     }
 
-    // Cette méthode est appelée automatiquement pour dessiner le composant
+    // Permet de changer la couleur de base (ex: violet, bleu...)
+    public void setBaseColor(Color baseColor) {
+        this.baseColor = baseColor;
+        repaint(); // Redessine le composant
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Crée un objet Graphics2D pour dessiner plus précisément
         Graphics2D g2 = (Graphics2D) g.create();
-
-        // Active l'antialiasing (meilleur rendu des bords arrondis)
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // Création du dégradé de transparence :
-        // De gauche (sombre semi-transparent noir) à droite (complètement transparent)
+        // Dégradé basé sur la couleur choisie, du semi-transparent au transparent
         GradientPaint gradient = new GradientPaint(
-            0, 0, new Color(0, 0, 0, 120),     // noir semi-transparent à gauche
-            getWidth(), 0, new Color(0, 0, 0, 0) // transparent à droite
+            0, 0, new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), 250),
+            getWidth(), 0, new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), 60)
         );
 
-        // Applique le dégradé sur un rectangle aux coins arrondis
         g2.setPaint(gradient);
         g2.fillRoundRect(0, 0, getWidth(), getHeight(), cornerRadius, cornerRadius);
 
-        // Libère les ressources graphiques
         g2.dispose();
     }
+
+    
+    
+    
 }
 
 
