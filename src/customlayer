@@ -471,12 +471,12 @@ public class CustomDialog extends JDialog {
 import javax.swing.*;
 import java.awt.*;
 
-public class NewClass extends JPanel {
+public class CustomPanel extends JPanel {
 
     private int cornerRadius;
     private Color baseColor = new Color(0, 0, 0); // noir par défaut
 
-    public NewClass() {
+    public CustomPanel() {
         this.cornerRadius = 50;
         setOpaque(false);
     }
