@@ -1,0 +1,45 @@
+import javax.swing.*;
+import java.awt.*;
+//====================================classe du jpanel personalisée =============================================================================================
+public class CustomPanel extends JPanel {
+    
+    private ImageIcon icon;
+    
+    public CustomPanel() {
+        // Configuration du JPanel avec fond bleu ciel
+        this.setBackground(new Color(135, 206, 235)); // Couleur bleu ciel (Sky Blue)
+        this.setLayout(new FlowLayout(FlowLayout.RIGHT)); // Layout horizontal, aligné à gauche
+        
+        // Chargement et redimensionnement de l'icône
+        try {
+            ImageIcon originalIcon = new ImageIcon("C:\\Users\\manel\\OneDrive\\Images\\Screenshots\\logo.png");
+            Image image = originalIcon.getImage();
+            Image resizedImage = image.getScaledInstance(24, 24, Image.SCALE_SMOOTH);
+            icon = new ImageIcon(resizedImage);
+            
+            // Ajout de l'icône au panel sous forme de JLabel
+            JLabel iconLabel = new JLabel(icon);
+            this.add(iconLabel);
+            
+            // Vous pouvez ajouter un texte après l'icône pour démontrer l'alignement horizontal
+            JLabel textLabel = new JLabel("مرحب");
+            textLabel.setForeground(Color.WHITE); // Texte en blanc pour contraste
+            textLabel.setFont(new Font("Arial", Font.BOLD, 14));
+            this.add(textLabel);
+            
+        } catch (Exception e) {
+            System.out.println("Erreur lors du chargement de l'icône: " + e.getMessage());
+        }
+          // Ajouter un bouton de fermeture à la barre de titre
+        JButton closeButton = new JButton("×");
+        closeButton.setForeground(Color.WHITE);
+        closeButton.setFont(new Font("Arial", Font.BOLD, 16));
+        closeButton.setBorderPainted(false);
+        closeButton.setContentAreaFilled(false);
+        closeButton.setFocusPainted(false);
+        closeButton.addActionListener(e -> System.exit(0));
+        this.add(closeButton);
+    }
+
+   
+}
