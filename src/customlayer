@@ -275,6 +275,197 @@ public class CustomFrame extends JFrame {
     
 }
 
+//=====================================================class du jdialoque personalisée===================================================================
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class CustomDialog extends JDialog {
+    
+    private NewClass titleBar;
+    private JPanel contentPanel;
+    private Point initialClick;
+    private boolean isResizing = false;
+    
+    public CustomDialog(Frame owner, boolean modal) {
+        super(owner, modal);
+        
+        // Supprimer la décoration standard de la boîte de dialogue
+        setUndecorated(true);
+        
+        // Créer un layout principal
+        setLayout(new BorderLayout());
+        
+        // Initialiser la barre de titre personnalisée (utilisant NewClass)
+        titleBar = new NewClass();
+        titleBar.setPreferredSize(new Dimension(getWidth(), 40)); // Hauteur de 40px pour la barre de titre
+        
+        
+        
+        // Ajouter la fonctionnalité de déplacement de la boîte de dialogue
+        addMoveWindowListener();
+        
+        // Créer un panel pour le contenu
+        contentPanel = new JPanel();
+        contentPanel.setBackground(Color.WHITE);
+        contentPanel.setLayout(new BorderLayout());
+        
+        // Ajouter un texte d'exemple dans le panel de contenu
+        JLabel exampleLabel = new JLabel("Contenu de la boîte de dialogue", SwingConstants.CENTER);
+        exampleLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        contentPanel.add(exampleLabel, BorderLayout.CENTER);
+        
+        // Ajouter une bordure pour l'effet visuel
+        getRootPane().setBorder(BorderFactory.createLineBorder(new Color(100, 181, 246), 2));
+        
+        // Ajouter les composants à la dialog
+        add(titleBar, BorderLayout.NORTH);
+        add(contentPanel, BorderLayout.CENTER);
+        
+        // Ajouter des écouteurs pour le redimensionnement
+        addResizeListener();
+        
+        // Configurer la taille et la position de la boîte de dialogue
+        setSize(400, 300);
+        setLocationRelativeTo(owner);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+    }
+    
+    private void addControlButtons() {
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+        buttonPanel.setOpaque(false);
+        
+        // Bouton Fermer
+        JButton closeBtn = createButton("×", new Color(135, 206, 235));
+        closeBtn.addActionListener(e -> dispose());
+        
+        buttonPanel.add(closeBtn);
+        
+        titleBar.add(buttonPanel);
+    }
+    
+    private JButton createButton(String text, Color bgColor) {
+        JButton button = new JButton(text);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setFont(new Font("Arial", Font.BOLD, 16));
+        button.setForeground(Color.WHITE);
+        button.setPreferredSize(new Dimension(30, 25));
+        
+        // Hover effect
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (text.equals("×")) {
+                    button.setForeground(Color.RED);
+                } else {
+                    button.setForeground(Color.LIGHT_GRAY);
+                }
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setForeground(Color.WHITE);
+            }
+        });
+        
+        return button;
+    }
+    
+    private void addMoveWindowListener() {
+        titleBar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                initialClick = e.getPoint();
+                getComponentAt(initialClick);
+            }
+        });
+        
+        titleBar.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                // Récupérer la position actuelle de la souris
+                int thisX = getLocation().x;
+                int thisY = getLocation().y;
+                
+                // Déterminer le déplacement
+                int xMoved = e.getX() - initialClick.x;
+                int yMoved = e.getY() - initialClick.y;
+                
+                // Déplacer la boîte de dialogue
+                int X = thisX + xMoved;
+                int Y = thisY + yMoved;
+                setLocation(X, Y);
+            }
+        });
+    }
+    
+    private void addResizeListener() {
+        // Définir une zone de bord où le redimensionnement est activé
+        int border = 5;
+        
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                isResizing = true;
+                initialClick = e.getPoint();
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                isResizing = false;
+            }
+        });
+        
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int x = e.getX();
+                int y = e.getY();
+                int width = getWidth();
+                int height = getHeight();
+                
+                // Définir le curseur selon la position
+                if (x >= width - border && y >= height - border) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
+                } else if (x >= width - border) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
+                } else if (y >= height - border) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR));
+                } else {
+                    setCursor(Cursor.getDefaultCursor());
+                }
+            }
+            
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (isResizing && getCursor() != Cursor.getDefaultCursor()) {
+                    int newWidth = getWidth();
+                    int newHeight = getHeight();
+                    
+                    if (getCursor() == Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR)) {
+                        newWidth = e.getX();
+                    } else if (getCursor() == Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR)) {
+                        newHeight = e.getY();
+                    } else if (getCursor() == Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR)) {
+                        newWidth = e.getX();
+                        newHeight = e.getY();
+                    }
+                    
+                    if (newWidth >= 200 && newHeight >= 150) {
+                        setSize(newWidth, newHeight);
+                        validate();
+                        repaint();
+                    }
+                }
+            }
+        });
+    }
+    
+   
+}
+
 
 
 
