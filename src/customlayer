@@ -43,3 +43,79 @@ public class CustomPanel extends JPanel {
 
    
 }
+
+
+
+
+
+
+//======================================class du jframe personaliséeees===================================================================================
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class CustomFrame extends JFrame {
+    
+    private NewClass titleBar; // Votre JPanel personnalisé existant
+    private Point initialClick;
+    
+    public CustomFrame() {
+        // Supprimer la décoration standard de fenêtre
+        setUndecorated(true);
+        
+        // Initialiser le layout principal
+        setLayout(new BorderLayout());
+        
+        // Instancier votre barre de titre personnalisée
+        titleBar = new NewClass();
+        
+        // Ajouter la fonction de déplacement de fenêtre à votre barre de titre
+        enableWindowDrag(titleBar);
+        
+      
+        
+        // Créer un panel pour le contenu principal
+        JPanel contentPanel = new JPanel();
+        contentPanel.setBackground(Color.WHITE);
+        contentPanel.setLayout(new BorderLayout());
+        contentPanel.add(new JLabel("Contenu de l'application", SwingConstants.CENTER), 
+                BorderLayout.CENTER);
+        
+        // Ajouter une bordure pour l'effet visuel
+        getRootPane().setBorder(BorderFactory.createLineBorder(new Color(100, 181, 246), 2));
+        
+        // Assembler la fenêtre
+        add(titleBar, BorderLayout.NORTH);
+        add(contentPanel, BorderLayout.CENTER);
+        
+        // Configurer la taille et la position
+        setSize(800, 600);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    private void enableWindowDrag(JComponent component) {
+        component.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                initialClick = e.getPoint();
+            }
+        });
+        
+        component.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                // Calculer le déplacement
+                int thisX = getLocation().x;
+                int thisY = getLocation().y;
+                
+                // Déterminer la distance de déplacement
+                int xMoved = e.getX() - initialClick.x;
+                int yMoved = e.getY() - initialClick.y;
+                
+                // Déplacer la fenêtre
+                setLocation(thisX + xMoved, thisY + yMoved);
+            }
+        });
+    }
