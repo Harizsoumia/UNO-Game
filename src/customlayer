@@ -471,12 +471,12 @@ public class CustomDialog extends JDialog {
 import javax.swing.*;
 import java.awt.*;
 
-public class NewClass extends JPanel {
+public class CustomPanel extends JPanel {
 
     private int cornerRadius;
     private Color baseColor = new Color(0, 0, 0); // noir par défaut
 
-    public NewClass() {
+    public CustomPanel() {
         this.cornerRadius = 50;
         setOpaque(false);
     }
@@ -511,9 +511,71 @@ public class NewClass extends JPanel {
     
 }
 
+//==============================ajoutée une class pour metre une image dans le panel perso =================================================================
 
 
 
+import javax.swing.*;
+import java.awt.*;
+
+public class CustomBImagePanel extends CustomPanel {
+
+    private Image backgroundImage;     // L’image à afficher
+    private int imgX = 0;              // Position X de l’image
+    private int imgY = 0;              // Position Y de l’image
+    private int imgWidth = -1;         // Largeur personnalisée (-1 = taille d'origine)
+    private int imgHeight = -1;        // Hauteur personnalisée
+    private boolean resizeToFit = false; // Redimensionner l’image à la taille du panel
+
+    // Constructeur : charge l’image à partir du chemin donné
+    public CustomBImagePanel(String imagePath) {
+        try {
+            backgroundImage = new ImageIcon(imagePath).getImage();
+        } catch (Exception e) {
+            System.out.println("Erreur chargement image : " + e.getMessage());
+        }
+    }
+
+    // Définit la position personnalisée de l’image dans le panel
+    public void setImagePosition(int x, int y) {
+        this.imgX = x;
+        this.imgY = y;
+        repaint(); // Redessine le panel
+    }
+
+    // Définit une taille personnalisée pour l’image
+    public void setImageSize(int width, int height) {
+        this.imgWidth = width;
+        this.imgHeight = height;
+        this.resizeToFit = false; // Priorité à la taille définie
+        repaint();
+    }
+
+    // Active ou désactive le redimensionnement automatique à la taille du panel
+    public void setResizeToFitPanel(boolean resize) {
+        this.resizeToFit = resize;
+        repaint();
+    }
+
+    // Méthode de dessin du composant
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        if (backgroundImage != null) {
+            if (resizeToFit) {
+                // Redimensionne l’image à toute la taille du panel
+                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+            } else if (imgWidth > 0 && imgHeight > 0) {
+                // Dessine avec taille et position personnalisées
+                g.drawImage(backgroundImage, imgX, imgY, imgWidth, imgHeight, this);
+            } else {
+                // Affiche l’image à sa taille originale à la position donnée
+                g.drawImage(backgroundImage, imgX, imgY, this);
+            }
+        }
+    }
+}
 
 
 
