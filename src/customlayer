@@ -471,12 +471,12 @@ public class CustomDialog extends JDialog {
 import javax.swing.*;
 import java.awt.*;
 
-public class CustomPanel extends JPanel {
+public class NewClass extends JPanel {
 
     private int cornerRadius;
     private Color baseColor = new Color(0, 0, 0); // noir par défaut
 
-    public CustomPanel() {
+    public NewClass() {
         this.cornerRadius = 50;
         setOpaque(false);
     }
@@ -497,7 +497,7 @@ public class CustomPanel extends JPanel {
         // Dégradé basé sur la couleur choisie, du semi-transparent au transparent
         GradientPaint gradient = new GradientPaint(
             0, 0, new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), 250),
-            getWidth(), 0, new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), 60)
+            getWidth(), 0, new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), 120)
         );
 
         g2.setPaint(gradient);
